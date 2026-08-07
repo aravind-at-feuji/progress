@@ -1,0 +1,44 @@
+name: Practice Workflow
+
+# Trigger workflow on push and pull request
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-file:
+
+    # Create a virtual environment on GitHub runner
+    runs-on: ubuntu-latest
+
+    steps:
+      # Get your repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup Python environment
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Create virtual environment
+      - name: Create virtual environment
+        run: |
+          python -m venv venv
+
+      # Install dependencies if requirements.txt exists
+      - name: Install dependencies
+        run: |
+          source venv/bin/activate
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # Run your file
+      - name: Run Python file
+        run: |
+          source venv/bin/activate
+          python main.py
